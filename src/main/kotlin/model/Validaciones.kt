@@ -1,16 +1,15 @@
 package model
 
+import java.time.LocalDate
+
 object Validaciones {
 
-    // Regex para validar email
     private val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex()
 
-    // Función para validar email
     fun validarEmail(email: String): Boolean {
         return emailRegex.matches(email)
     }
 
-    // Función para formatear teléfono chileno (formato: +56 9 1234 5678)
     fun formatearTelefono(telefono: String): String {
         val digitos = telefono.replace(Regex("[^0-9]"), "")
         return when {
@@ -22,12 +21,18 @@ object Validaciones {
         }
     }
 
-    // Función para validar rango de fechas (formato: DD-MM)
     fun validarRangoFecha(fecha: String, rangoInicio: Int, rangoFin: Int): Boolean {
         val partes = fecha.split("-")
         if (partes.size != 2) return false
-
         val dia = partes[0].toIntOrNull() ?: return false
         return dia in rangoInicio..rangoFin
+    }
+
+    fun validarCantidad(cantidad: Int): Boolean {
+        return cantidad in 1..100
+    }
+
+    fun estaEnPeriodoPromocional(dia: Int, inicio: Int = 10, fin: Int = 20): Boolean {
+        return dia in inicio..fin
     }
 }
