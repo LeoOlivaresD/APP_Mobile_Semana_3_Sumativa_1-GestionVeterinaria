@@ -1,120 +1,184 @@
-# Sistema de Gestión Veterinaria
+# Sistema de Gestión de Veterinaria
 
-Aplicación desarrollada en Kotlin para la gestión integral de clínicas veterinarias, facilitando el manejo de agendas, citas, consultas y administración de veterinarios.
+Sistema desarrollado en Kotlin para digitalizar el flujo de trabajo de una veterinaria, permitiendo gestionar pacientes (mascotas), registrar consultas, gestionar agendas de veterinarios y aplicar promociones en medicamentos.
 
-## 📋 Descripción del Proyecto
+## 📋 Descripción
 
-Sistema de gestión veterinaria que permite administrar agendas de veterinarios, programar consultas, gestionar información de mascotas y sus dueños, con validaciones robustas y sistema de promociones.
+Esta aplicación permite a una veterinaria:
+- Registrar información de dueños y mascotas
+- Agendar consultas veterinarias
+- Gestionar medicamentos con promociones
+- Aplicar descuentos automáticos en períodos promocionales
+- Prevenir duplicados de clientes
+- Generar resúmenes completos de atenciones
 
-## ✨ Características Principales
+## 🚀 Características Principales
 
-### Gestión de Agendas
-- Sistema de agendas individuales por veterinario
-- Gestión de citas y consultas programadas
-- Organización eficiente de horarios
+### 1. **Validaciones con Regex y Ranges**
+- Validación de correos electrónicos (formato: nombre@dominio.com)
+- Formateo automático de teléfonos chilenos (+56 9 XXXX XXXX)
+- Validación de cantidades (rango 1-100)
+- Verificación de períodos promocionales (días 10-20 del mes)
 
-### Sistema de Validaciones
-- **Validación de Email**: Verificación mediante expresión regular
-- **Formateo de Teléfonos**: Formato automático para números chilenos (+56)
-  - Soporta números de 9 dígitos (ej: 912345678)
-  - Soporta números con código de país (ej: 56912345678)
-- **Validación de Rangos de Fecha**: Verificación de días dentro de rangos específicos
-- **Validación de Cantidades**: Rango permitido de 1 a 100 unidades
-- **Sistema de Períodos Promocionales**: Detección automática de períodos de descuento
+### 2. **Anotaciones y Reflection**
+- Anotación personalizada `@Promocionable` para medicamentos
+- Cálculo dinámico de descuentos (20%)
+- Análisis de clases mediante reflection (propiedades y métodos)
 
-### Sistema de Promociones
-- Anotación `@Promocionable` para productos y servicios
-- Configuración flexible de descuentos
-- Descripción personalizada de promociones
+### 3. **Sobrecarga de Operadores**
+- Operador `+` para combinar pedidos
+- Operador `==` para comparar medicamentos
+- Operador `+` para agregar stock a medicamentos
 
-## 📱 Requisitos del Sistema
+### 4. **Desestructuración**
+- Extracción de datos de Cliente (nombre, email, teléfono)
+- Extracción de datos de Pedido (id, cliente, medicamentos, total)
 
-### Para Desarrollo:
-- JDK 11 o superior
-- Kotlin 1.8+
-- IDE recomendado: IntelliJ IDEA o Android Studio
+### 5. **Prevención de Duplicados**
+- Sobrescritura de `equals()` y `hashCode()`
+- Comparación personalizada de clientes por nombre y email
+- Uso de Sets para evitar registros duplicados
 
-### Para Ejecución:
-- Java Runtime Environment (JRE) 11+
+## 🛠️ Tecnologías Utilizadas
 
-## 🚀 Instalación y Ejecución
+- **Lenguaje**: Kotlin
+- **IDE**: IntelliJ IDEA
+- **Build Tool**: Gradle
+- **JDK**: Compatible con Java 8+
 
-### 1. Clonar el Repositorio
+## 📦 Estructura del Proyecto
+
+```
+GestionVeterinaria/
+├── src/
+│   └── main/
+│       └── kotlin/
+│           ├── Main.kt
+│           └── model/
+│               ├── Agenda.kt
+│               ├── Cliente.kt
+│               ├── Consulta.kt
+│               ├── Dueno.kt
+│               ├── Mascota.kt
+│               ├── Medicamento.kt
+│               ├── Pedido.kt
+│               ├── Promocionable.kt
+│               ├── Validaciones.kt
+│               ├── Veterinaria.kt
+│               └── Veterinario.kt
+└── build.gradle.kts
+```
+
+## Cómo Ejecutar
+
+### Opción 1: Desde IntelliJ IDEA
+1. Abre el proyecto en IntelliJ IDEA
+2. Espera a que Gradle sincronice las dependencias
+3. Ejecuta el archivo `Main.kt`
+4. Sigue las instrucciones en la consola
+
+### Opción 2: Desde Terminal
 ```bash
-git clone https://github.com/LeoOlivaresD/APP_Mobile_Semana_3_Sumativa_1-GestionVeterinaria.git
-cd APP_Mobile_Semana_3_Sumativa_1-GestionVeterinaria
+# Compilar el proyecto
+./gradlew build
+
+# Ejecutar la aplicación
+./gradlew run
 ```
 
-### 2. Compilar el Proyecto
-```bash
-kotlinc -include-runtime -d GestionVeterinaria.jar *.kt
+## 📖 Guía de Uso
+
+### 1. **Registro de Dueño**
+```
+Nombre: Juan Pérez
+Email: juan@email.com
+Teléfono: 912345678
+```
+- El email debe tener formato válido
+- El teléfono debe tener 9 dígitos y comenzar con 9
+- Se formateará automáticamente a: +56 9 1234 5678
+
+### 2. **Registro de Mascota**
+```
+Nombre: Rocky
+Especie: Perro
+Edad: 5 (rango 0-50)
+Peso: 15.5 (rango 0.1-200 kg)
 ```
 
-### 3. Ejecutar la Aplicación
-```bash
-java -jar GestionVeterinaria.jar
+### 3. **Registro de Consulta**
+```
+Cantidad de productos: 2 (rango 1-100)
+Tipo de atención:
+  1. Consulta general ($15,000)
+  2. Urgencia ($20,000)
+  3. Vacunación ($10,000)
+  4. Control ($12,000)
 ```
 
-O desde tu IDE:
-- Abrir el proyecto
-- Ejecutar la función `main()` del archivo principal
+### 4. **Selección de Medicamento**
+```
+Medicamentos disponibles:
+  1. Vacuna Rabia - $8,000
+  2. Antiparasitario - $15,000
+  3. Antiinflamatorio - $9,000
+```
+- Si estás entre los días 10-20 del mes, se aplica 20% de descuento automáticamente
 
-## 📂 Estructura del Proyecto
+### 5. **Resumen Final**
+Al finalizar, verás:
+- Resumen de todas las atenciones registradas
+- Demostración de desestructuración de objetos
+- Combinación de pedidos
+- Prevención de duplicados
+
+## 📊 Ejemplo de Salida
 
 ```
-APP_Mobile_Semana_3_Sumativa_1-GestionVeterinaria/
-│
-├── model/
-│   ├── Agenda.kt              # Gestión de agendas veterinarias
-│   ├── Validaciones.kt        # Utilidades de validación
-│   ├── Veterinaria.kt         # Clase principal del sistema
-│   ├── Veterinario.kt         # Modelo de veterinario
-│   ├── Consulta.kt            # Modelo de consulta
-│   ├── Promocionable.kt       # Anotación para promociones
-│   └── [otros modelos]
-│
-├── Main.kt                    # Punto de entrada de la aplicación
-└── README.md
+============================================================
+SISTEMA DE VETERINARIA - FLUJO INTERACTIVO
+============================================================
+
+--- REGISTRO DE DUEÑO ---
+✓ Dueño registrado: Juan Pérez, juan@email.com, +56 9 1234 5678
+
+--- REGISTRO DE MASCOTA ---
+✓ Mascota registrada: Rocky, Perro, 5 años, 15.5 kg
+
+--- PROMOCIÓN DE MEDICAMENTO ---
+✓ Medicamento promocionable: Antiinflamatorio
+  - Descuento: 20.0%
+  - Precio con descuento: $7200.0
+
+============================================================
+DEMOSTRACIÓN DE COMBINACIÓN DE PEDIDOS
+============================================================
+✓ Pedido Combinado: 2 medicamentos, total: $23000.0
 ```
 
-### Annotation Promocionable
+## Funcionalidades Destacadas
+
+### Validación Inteligente
 ```kotlin
-@Promocionable(descuento = 0.15, descripcion = "Consulta con descuento")
-```
-Permite marcar servicios o productos con descuentos especiales.
+// Email inválido
+Email: usuario
+✗ Email inválido. Debe tener formato nombre@dominio.com
 
-## 📝 Ejemplos de Uso
-
-### Validación de Email
-```kotlin
-val emailValido = Validaciones.validarEmail("cliente@veterinaria.cl")
-// Retorna: true
+// Email válido
+Email: usuario@dominio.com
+✓ Email válido
 ```
 
-### Formateo de Teléfono
-```kotlin
-val telefonoFormateado = Validaciones.formatearTelefono("912345678")
-// Retorna: "+56 9 1234 5678"
+### Promociones Automáticas
+Si el día actual está entre el 10 y 20 del mes, se aplica automáticamente un 20% de descuento en todos los medicamentos.
+
+### Prevención de Duplicados
+El sistema detecta y previene el registro de clientes duplicados basándose en nombre y email:
+```
+✓ Clientes únicos registrados: 2 (de 3 intentos)
+  - Se previno 1 duplicado exitosamente
 ```
 
-### Validación de Período Promocional
-```kotlin
-val enPromocion = Validaciones.estaEnPeriodoPromocional(15, 10, 20)
-// Retorna: true (día 15 está entre el 10 y 20)
-```
+---
 
-## 🧪 Características de Validación
-
-### Formato de Email
-- Soporta letras, números y caracteres especiales (+, _, ., -)
-- Requiere símbolo @
-- Dominio válido con extensión de 2+ caracteres
-
-### Formato de Teléfono Chileno
-- Detecta números de 9 dígitos que comienzan con 9
-- Detecta números con código de país 56
-- Formatea automáticamente a: `+56 9 XXXX XXXX`
-
-### Validación de Cantidades
-- Rango permitido: 1 a 100 unidades
-- Previene valores negativos o excesivos
+**Nota**: Para reportar problemas o sugerencias, contacta al desarrollador del proyecto.
